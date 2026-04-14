@@ -12,3 +12,8 @@
 venv/.*
 venv
 **/*.egg-info
+node_modules
+.venv
+.venv/*
+playwright-report
+test-results

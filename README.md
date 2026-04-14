@@ -45,4 +45,65 @@ To make it easier on everybody, it's best if we use a PR to diff what work was c
 
 ## Running Tests
 
-Write instructions for how a user executes the automated tests you created.
+### Local setup
+
+The app and the Playwright suite use both Python and Node:
+
+- Python runs the Flask application
+- Node runs Playwright
+
+Recommended local setup:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+npm ci
+npx playwright install chromium
+```
+
+### Running the application
+
+Start the app locally with:
+
+```bash
+python3 paint_calculator/run.py
+```
+
+The app listens on `http://127.0.0.1:9200`.
+
+### Running Playwright tests
+
+With the app available locally, run:
+
+```bash
+npx playwright test
+```
+
+Other useful commands:
+
+```bash
+npm run test:headed
+npm run test:ui
+```
+
+### Notes on the Playwright suite
+
+The test suite lives under `tests/` and is organized around a small number of page objects plus a couple of shared helpers:
+
+- `tests/pages/`: page objects for home, dimensions, and results
+- `tests/support/`: shared flow and footer assertions
+- `tests/*.spec.ts`: smoke, validation/navigation, spec/bug coverage, and mobile coverage
+
+Some scenarios are marked with Playwright `test.fail()` on purpose. Those are known defects in the current application, and the tests are there to document the expected behavior without turning the whole suite red.
+
+### CI
+
+A GitHub Actions workflow is included in `.github/workflows/playwright.yml`.
+
+For pull requests, it will:
+
+1. install Python and Node dependencies
+2. install the Playwright Chromium browser
+3. run the Playwright suite
+4. upload the Playwright HTML report and raw test results as workflow artifacts
